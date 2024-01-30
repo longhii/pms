@@ -10,12 +10,8 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.binder.ValidationResult;
-import com.vaadin.flow.data.binder.Validator;
-import com.vaadin.flow.data.binder.ValueContext;
-import lombok.val;
 
 import java.time.LocalTime;
-import java.util.List;
 import java.util.Locale;
 
 @Deprecated

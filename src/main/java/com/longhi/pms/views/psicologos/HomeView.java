@@ -16,6 +16,7 @@ import org.springframework.context.ApplicationContext;
 import javax.annotation.security.RolesAllowed;
 import java.util.Map;
 import java.util.Objects;
+
 @Route(value = "")
 @RolesAllowed("ROLE_ADMIN")
 public class HomeView extends AppLayout {
@@ -24,9 +25,6 @@ public class HomeView extends AppLayout {
 
     @Autowired
     private ApplicationContext applicationContext;
-
-//    @Autowired
-//    private ConsultoriosView consultorioView;
 
     private final Map<String, Class<? extends Component>> abas = Map.of("Consultórios", ConsultoriosView.class);
 
@@ -48,7 +46,7 @@ public class HomeView extends AppLayout {
                 var bean = applicationContext.getBean(abas.get(labelTab));
                 setContent(bean);
             } else {
-                System.out.println("Label não habilitada: " + labelTab );
+                System.out.println("Label não habilitada: " + labelTab);
             }
         });
 

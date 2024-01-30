@@ -1,9 +1,7 @@
 package com.longhi.pms.views.psicologos.consultorio;
 
 import com.longhi.pms.models.Consultorio;
-import com.longhi.pms.models.HorarioAtendimento;
 import com.longhi.pms.services.ConsultorioService;
-import com.longhi.pms.views.psicologos.components.HorariosAtendimentoComponent;
 import com.vaadin.flow.component.AttachEvent;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.button.ButtonVariant;
@@ -159,15 +157,6 @@ public class ConsultoriosView extends VerticalLayout {
         binderConsultorio.forField(ufField)
             .asRequired("Necessário informar uma UF.")
             .bind(Consultorio::getUf, Consultorio::setUf);
-
-//        div1.setResponsiveSteps(
-//            // Use one column by default
-//            new FormLayout.ResponsiveStep("0", 1),
-//            // Use two columns, if layout's width exceeds 500px
-//            new FormLayout.ResponsiveStep("500px", 2)
-//        );
-//        // Stretch the username field over 2 columns
-//        form.setColspan(enderecoField, 2);
 
         var footerLayout = new HorizontalLayout();
         dialog.add(footerLayout);

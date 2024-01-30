@@ -15,7 +15,10 @@ public class HorarioAtendimento {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "horario_atendimento_id_seq")
     private Long id;
+
+    @Enumerated(EnumType.STRING)
     private DiaSemana diaSemana;
+
     private LocalTime horarioInicioManha;
     private LocalTime horarioFimManha;
     private LocalTime horarioInicioTarde;

@@ -1,5 +1,6 @@
 package com.longhi.pms.views.psicologos;
 
+import com.longhi.pms.views.psicologos.consultorio.ConsultoriosView;
 import com.vaadin.flow.component.Component;
 import com.vaadin.flow.component.applayout.AppLayout;
 import com.vaadin.flow.component.applayout.DrawerToggle;
@@ -15,7 +16,6 @@ import org.springframework.context.ApplicationContext;
 import javax.annotation.security.RolesAllowed;
 import java.util.Map;
 import java.util.Objects;
-
 @Route(value = "")
 @RolesAllowed("ROLE_ADMIN")
 public class HomeView extends AppLayout {

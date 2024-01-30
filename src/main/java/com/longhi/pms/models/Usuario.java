@@ -16,6 +16,7 @@ public abstract class Usuario {
     protected Long id;
 
     @NotNull
+    @Column(unique = true)
     protected String login;
 
     @NotNull

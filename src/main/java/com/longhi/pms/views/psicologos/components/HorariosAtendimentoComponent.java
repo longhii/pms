@@ -9,24 +9,30 @@ import com.vaadin.flow.component.orderedlayout.VerticalLayout;
 import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.component.timepicker.TimePicker;
 import com.vaadin.flow.data.binder.Binder;
+import com.vaadin.flow.data.binder.ValidationResult;
+import com.vaadin.flow.data.binder.Validator;
+import com.vaadin.flow.data.binder.ValueContext;
 import lombok.val;
 
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Locale;
 
+@Deprecated
 public class HorariosAtendimentoComponent extends Composite<VerticalLayout> {
 
     private TextField dataField;
     private ComboBox<DiaSemana> diaSemanaBox;
     private TimePicker[] horarios;
 
-    public HorariosAtendimentoComponent(Consultorio consultorio) {
-        val horariosAtendimento = consultorio.getHorariosAtendimento();
+    public HorariosAtendimentoComponent(Consultorio consultorio, Binder<HorarioAtendimento> binderHorario) {
+        var horariosAtendimento = consultorio.getHorariosAtendimento();
         this.horarios = new TimePicker[4];
 
         var layout = getContent();
 
         this.diaSemanaBox = new ComboBox<>("Dia Semana", DiaSemana.values());
+        this.diaSemanaBox.setRequired(true);
 
         for (var i = 0; i < horarios.length; i++) {
             var tp = new TimePicker();
@@ -37,8 +43,6 @@ public class HorariosAtendimentoComponent extends Composite<VerticalLayout> {
             this.horarios[i] = tp;
             layout.add(this.horarios[i]);
         }
-
-        var binderHorario = new Binder<>(HorarioAtendimento.class);
 
         binderHorario.forField(this.horarios[0])
             .bind(HorarioAtendimento::getHorarioInicioManha, HorarioAtendimento::setHorarioInicioManha);
@@ -51,6 +55,18 @@ public class HorariosAtendimentoComponent extends Composite<VerticalLayout> {
 
         binderHorario.forField(this.horarios[3])
             .bind(HorarioAtendimento::getHorarioFimTarde, HorarioAtendimento::setHorarioFimTarde);
+
+        binderHorario.withValidator((h, c) -> {
+            var horarioMatutinoValido = (this.horarios[0].getValue() != null && this.horarios[1].getValue() != null);
+            var horarioVespertinoValido = (this.horarios[2].getValue() != null && this.horarios[3].getValue() != null);
+
+            if (horarioVespertinoValido || horarioMatutinoValido) {
+                return ValidationResult.ok();
+            } else {
+                var message = "Necessário informar período matutino ou vespertino";
+                return ValidationResult.error(message);
+            }
+        });
 
         this.diaSemanaBox.addValueChangeListener(d -> {
             var diaSemana = d.getValue();
@@ -72,7 +88,6 @@ public class HorariosAtendimentoComponent extends Composite<VerticalLayout> {
 
         layout.add(diaSemanaBox);
     }
-
     public TextField getDataField() {
         return dataField;
     }

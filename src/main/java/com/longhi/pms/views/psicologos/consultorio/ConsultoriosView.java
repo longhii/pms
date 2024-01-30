@@ -1,6 +1,7 @@
-package com.longhi.pms.views.psicologos;
+package com.longhi.pms.views.psicologos.consultorio;
 
 import com.longhi.pms.models.Consultorio;
+import com.longhi.pms.models.HorarioAtendimento;
 import com.longhi.pms.services.ConsultorioService;
 import com.longhi.pms.views.psicologos.components.HorariosAtendimentoComponent;
 import com.vaadin.flow.component.AttachEvent;
@@ -107,7 +108,7 @@ public class ConsultoriosView extends VerticalLayout {
         var binderConsultorio = new Binder<Consultorio>();
         binderConsultorio.setBean(consultorioBean);
 
-        var formHorarioAtendimento = new HorariosAtendimentoComponent(consultorioBean);
+        var formHorarioAtendimento = new HorariosAtendimentoView(consultorioService, consultorioBean);
         formHorarioAtendimento.setVisible(false);
         horariosTab.add(formHorarioAtendimento);
 
@@ -173,7 +174,9 @@ public class ConsultoriosView extends VerticalLayout {
 
         var saveButton = new Button("Salvar");
         saveButton.addClickListener(ev -> {
-            if (binderConsultorio.validate().isOk()) {
+            var validacaoConsultorio = binderConsultorio.validate();
+
+            if (validacaoConsultorio.isOk()) {
                 try {
                     binderConsultorio.writeBean(consultorioBean);
                     consultorioService.inserirConsultorio(consultorioBean);
@@ -184,14 +187,15 @@ public class ConsultoriosView extends VerticalLayout {
                     throw new RuntimeException(e);
                 }
             } else {
-                Notification.show("Erro: " + binderConsultorio.validate().getValidationErrors());
+                        validacaoConsultorio.getValidationErrors()
+                        .forEach(v -> Notification.show("Erro: " + v.getErrorMessage()));
             }
         });
         saveButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
 
         var cancelButton = new Button("Cancel", e -> dialog.close());
-        footerLayout.add(cancelButton);
         footerLayout.add(saveButton);
+        footerLayout.add(cancelButton);
         footerLayout.setJustifyContentMode(JustifyContentMode.EVENLY);
         return dialog;
     }

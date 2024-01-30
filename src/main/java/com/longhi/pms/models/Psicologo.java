@@ -13,8 +13,13 @@ import java.time.LocalDateTime;
 @Getter @Setter @NoArgsConstructor
 public class Psicologo extends Usuario {
 
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "psicologos_id_seq")
+    private Long id;
+
     @NotNull
     private LocalDateTime dataRenovacao;
+
     @NotNull
     private Boolean permitirRenovar = true;
 

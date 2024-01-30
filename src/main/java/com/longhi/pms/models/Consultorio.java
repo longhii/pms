@@ -32,7 +32,10 @@ public class Consultorio {
 
     private String cep;
 
-    @OneToMany(cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "consultorio",
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE},
+            fetch = FetchType.EAGER,
+            orphanRemoval = true)
     private List<HorarioAtendimento> horariosAtendimento = new ArrayList<>();
 
     @NotNull

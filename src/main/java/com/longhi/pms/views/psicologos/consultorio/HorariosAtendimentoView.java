@@ -23,7 +23,7 @@ import java.util.Comparator;
 import java.util.Locale;
 
 public class HorariosAtendimentoView extends VerticalLayout {
-    
+
     private Grid<HorarioAtendimento> horariosAtendimentoGrid;
     private Button adicionarHorarioAtendimentoButton;
     private Consultorio consultorio;
@@ -157,11 +157,9 @@ public class HorariosAtendimentoView extends VerticalLayout {
             var validacaoHorarios = binderHorario.validate();
 
             if (validacaoHorarios.isOk()) {
-                    // binderHorario.writeBean(horarioAtendimento);
-                    //consultorio.setHorariosAtendimento(horariosAtendimento);
-                    // consultorioService.inserirConsultorio(consultorio);
-                    atualizarGrid();
-                    dialog.close();
+                // será salvo na consultorioView
+                atualizarGrid();
+                dialog.close();
 
             } else {
                 validacaoHorarios.getValidationErrors()

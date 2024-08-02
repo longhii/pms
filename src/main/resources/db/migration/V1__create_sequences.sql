@@ -1,0 +1,1 @@
+CREATE SEQUENCE psicologo_id_seq;

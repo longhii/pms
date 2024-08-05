@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
 import java.time.ZoneId;
+import java.util.List;
 
 @Service
 public class PacienteService {
@@ -21,21 +22,24 @@ public class PacienteService {
     private AuthenticatedUser authenticatedUser;
 
     public Paciente salvarPaciente(Paciente paciente) {
-        var psi = authenticatedUser.get();
+        var psi = authenticatedUser.carregarPsicologoLogado();
 
         try {
-            if (psi.isPresent()) {
-                var psicolog = psi.get();
-                paciente.setPsicologo(psicolog);
-                paciente.setCreatedAt(LocalDate.now(ZoneId.systemDefault()));
-                return pacienteRepository.save(paciente);
-            } else {
-                throw new SecurityException("Não foi possível identificar usuário logado.");
-            }
-        } catch (SecurityException e) {
-           throw e;
+            paciente.setPsicologo(psi);
+            paciente.setCreatedAt(LocalDate.now(ZoneId.systemDefault()));
+            return pacienteRepository.save(paciente);
         } catch (DataIntegrityViolationException e) {
             throw new ValidationException("Paciente com telefone já cadastrado.");
         }
+    }
+
+    public List<Paciente> buscarPacientesPorPsicologo() {
+        var psi = authenticatedUser.carregarPsicologoLogado();
+
+        return pacienteRepository.findByPsicologo(psi);
+    }
+
+    public void removerPaciente(Paciente paciente) {
+        pacienteRepository.delete(paciente);
     }
 }

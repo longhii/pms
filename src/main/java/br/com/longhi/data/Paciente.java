@@ -55,6 +55,20 @@ public class Paciente {
         return telefone;
     }
 
+    public String getTelefoneMask() {
+        if (telefone.matches("\\(\\d{2}\\) \\d{5}-\\d{4}")) {
+            String ddd = telefone.substring(1, 3); // DDD
+            String secondPart = telefone.substring(12); // Segunda parte do número
+
+            // Monta o número transformado
+            String transformedPhoneNumber = String.format("(%s) %s-*%s", ddd, "*****", secondPart);
+            return transformedPhoneNumber;
+        } else {
+            // Caso o número não esteja no formato esperado
+            throw new IllegalArgumentException("Número de telefone não está no formato esperado.");
+        }
+    }
+
     public void setTelefone(String telefone) {
         this.telefone = telefone;
     }

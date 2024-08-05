@@ -26,6 +26,16 @@ public class AuthenticatedUser {
                 .map(userDetails -> psicologoRepository.findByLogin(userDetails.getUsername()));
     }
 
+    @Transactional
+    public Psicologo carregarPsicologoLogado() {
+        var psi = this.get();
+        if (psi.isPresent()) {
+            return psi.get();
+        } else {
+            throw new SecurityException("Não foi possível identificar usuário logado.");
+        }
+    }
+
     public void logout() {
         authenticationContext.logout();
     }

@@ -16,6 +16,10 @@ public class Consulta {
     @ManyToOne
     private Paciente paciente;
 
+    private StatusPagamento statusPagamento;
+
+    private Status status;
+
     private LocalDate data;
 
     private LocalTime horaInicio;
@@ -35,6 +39,22 @@ public class Consulta {
 
     public void setPaciente(Paciente paciente) {
         this.paciente = paciente;
+    }
+
+    public StatusPagamento getStatusPagamento() {
+        return statusPagamento;
+    }
+
+    public void setStatusPagamento(StatusPagamento statusPagamento) {
+        this.statusPagamento = statusPagamento;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
     }
 
     public LocalDate getData() {
@@ -59,13 +79,5 @@ public class Consulta {
 
     public void setHoraFim(LocalTime horaFim) {
         this.horaFim = horaFim;
-    }
-
-    public Pagamento getPagamento() {
-        return pagamento;
-    }
-
-    public void setPagamento(Pagamento pagamento) {
-        this.pagamento = pagamento;
     }
 }

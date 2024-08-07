@@ -3,6 +3,7 @@ package br.com.longhi.data;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Entity
 @Table(name = "pagamentos")
@@ -14,9 +15,10 @@ public class Pagamento {
 
     private Double valor;
 
-    private Status status;
-
     private LocalDateTime data;
+
+    @OneToMany
+    private List<Consulta> consultas;
 
     public Long getId() {
         return id;
@@ -30,19 +32,19 @@ public class Pagamento {
         this.valor = valor;
     }
 
-    public Status getStatus() {
-        return status;
-    }
-
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
     public LocalDateTime getData() {
         return data;
     }
 
     public void setData(LocalDateTime data) {
         this.data = data;
+    }
+
+    public List<Consulta> getConsultas() {
+        return consultas;
+    }
+
+    public void setConsultas(List<Consulta> consultas) {
+        this.consultas = consultas;
     }
 }

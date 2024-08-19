@@ -2,6 +2,14 @@
   "name": "no-name",
   "license": "UNLICENSED",
   "dependencies": {
+    "@fullcalendar/core": "6.1.9",
+    "@fullcalendar/daygrid": "6.1.9",
+    "@fullcalendar/interaction": "6.1.9",
+    "@fullcalendar/list": "6.1.9",
+    "@fullcalendar/moment": "6.1.9",
+    "@fullcalendar/moment-timezone": "6.1.9",
+    "@fullcalendar/multimonth": "6.1.9",
+    "@fullcalendar/timegrid": "6.1.9",
     "@polymer/polymer": "3.5.1",
     "@vaadin/a11y-base": "24.3.12",
     "@vaadin/accordion": "24.3.12",
@@ -77,6 +85,8 @@
     "date-fns": "2.29.3",
     "imask": "7.1.3",
     "lit": "3.1.2",
+    "moment": "2.29.4",
+    "moment-timezone": "0.5.40",
     "proj4": "2.9.2"
   },
   "devDependencies": {
@@ -173,10 +183,28 @@
     "proj4": "$proj4",
     "imask": "$imask",
     "@vaadin/vaadin-themable-mixin": "$@vaadin/vaadin-themable-mixin",
-    "date-fns": "$date-fns"
+    "date-fns": "$date-fns",
+    "@fullcalendar/core": "$@fullcalendar/core",
+    "@fullcalendar/list": "$@fullcalendar/list",
+    "@fullcalendar/moment-timezone": "$@fullcalendar/moment-timezone",
+    "@fullcalendar/interaction": "$@fullcalendar/interaction",
+    "@fullcalendar/timegrid": "$@fullcalendar/timegrid",
+    "moment": "$moment",
+    "@fullcalendar/daygrid": "$@fullcalendar/daygrid",
+    "moment-timezone": "$moment-timezone",
+    "@fullcalendar/multimonth": "$@fullcalendar/multimonth",
+    "@fullcalendar/moment": "$@fullcalendar/moment"
   },
   "vaadin": {
     "dependencies": {
+      "@fullcalendar/core": "6.1.9",
+      "@fullcalendar/daygrid": "6.1.9",
+      "@fullcalendar/interaction": "6.1.9",
+      "@fullcalendar/list": "6.1.9",
+      "@fullcalendar/moment": "6.1.9",
+      "@fullcalendar/moment-timezone": "6.1.9",
+      "@fullcalendar/multimonth": "6.1.9",
+      "@fullcalendar/timegrid": "6.1.9",
       "@polymer/polymer": "3.5.1",
       "@vaadin/a11y-base": "24.3.12",
       "@vaadin/accordion": "24.3.12",
@@ -252,6 +280,8 @@
       "date-fns": "2.29.3",
       "imask": "7.1.3",
       "lit": "3.1.2",
+      "moment": "2.29.4",
+      "moment-timezone": "0.5.40",
       "proj4": "2.9.2"
     },
     "devDependencies": {
@@ -272,6 +302,6 @@
       "workbox-core": "7.0.0",
       "workbox-precaching": "7.0.0"
     },
-    "hash": "ea44fb6dabfdd6a2b496e0fe5a8319f40f4af4344da88044e359a66f08f3f00e"
+    "hash": "2bbf131c48dcd88db72b7de30640f43a353e32a5010c9471e28cf8ed5ec52948"
   }
 }

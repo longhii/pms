@@ -1,9 +1,12 @@
 package br.com.longhi.data;
 
 import jakarta.persistence.*;
+import org.vaadin.stefan.fullcalendar.Entry;
+import org.vaadin.stefan.fullcalendar.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.ZoneId;
 
 @Entity
 @Table(name = "consultas")
@@ -14,10 +17,13 @@ public class Consulta {
     private Long id;
 
     @ManyToOne
+    @NotNull
     private Paciente paciente;
 
     private StatusPagamento statusPagamento;
 
+    @NotNull
+    @Enumerated(EnumType.STRING)
     private Status status;
 
     private LocalDate data;
@@ -30,7 +36,7 @@ public class Consulta {
     private Pagamento pagamento;
 
     public Long getId() {
-        return id;
+        return this.id;
     }
 
     public Paciente getPaciente() {
@@ -79,5 +85,19 @@ public class Consulta {
 
     public void setHoraFim(LocalTime horaFim) {
         this.horaFim = horaFim;
+    }
+
+    public Entry toEntry() {
+        Entry entry = new Entry(id.toString());
+        entry.setTitle(paciente.getNome());
+        entry.setColor(status.getCor());
+
+        var startZonedDateTime = data.atTime(horaInicio).atZone(ZoneId.of("America/Sao_Paulo"));
+        var endZonedDateTime = data.atTime(horaFim).atZone(ZoneId.of("America/Sao_Paulo"));
+
+        entry.setStart(startZonedDateTime.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime());
+        entry.setEnd(endZonedDateTime.withZoneSameInstant(ZoneId.of("UTC")).toLocalDateTime());
+
+        return entry;
     }
 }

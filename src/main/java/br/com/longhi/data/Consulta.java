@@ -80,4 +80,12 @@ public class Consulta {
     public void setHoraFim(LocalTime horaFim) {
         this.horaFim = horaFim;
     }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
 }

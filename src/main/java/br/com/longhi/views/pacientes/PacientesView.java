@@ -1,8 +1,7 @@
 package br.com.longhi.views.pacientes;
 
-import br.com.longhi.data.Paciente;
-import br.com.longhi.services.PacienteService;
-import br.com.longhi.views.MainLayout;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.vaadin.componentfactory.addons.inputmask.InputMask;
 import com.vaadin.flow.component.Composite;
 import com.vaadin.flow.component.button.Button;
@@ -11,6 +10,7 @@ import com.vaadin.flow.component.dependency.Uses;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
 import com.vaadin.flow.component.grid.GridVariant;
+import com.vaadin.flow.component.grid.dataview.GridListDataView;
 import com.vaadin.flow.component.icon.Icon;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -21,12 +21,16 @@ import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.data.binder.Binder;
 import com.vaadin.flow.data.renderer.LocalDateRenderer;
 import com.vaadin.flow.data.validator.EmailValidator;
+import com.vaadin.flow.data.value.ValueChangeMode;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.theme.lumo.LumoUtility.Gap;
+
+import br.com.longhi.data.Paciente;
+import br.com.longhi.services.PacienteService;
+import br.com.longhi.views.MainLayout;
 import jakarta.annotation.security.PermitAll;
 import jakarta.validation.ValidationException;
-import org.springframework.beans.factory.annotation.Autowired;
 
 
 @PageTitle("Pacientes")
@@ -83,7 +87,28 @@ public class PacientesView extends Composite<VerticalLayout> {
             hr.add(btEdit, btRemove);
             return hr;
         });
-        pacientesGrid.setItems(pacienteService.buscarPacientesPorPsicologo());
+        GridListDataView<Paciente> dataView = pacientesGrid.setItems(pacienteService.buscarPacientesPorPsicologo());
+
+        var searchField = new TextField();
+        searchField.setPlaceholder("Pesquisar paciente...");
+        searchField.setPrefixComponent(new Icon(VaadinIcon.SEARCH));
+        searchField.setClearButtonVisible(true);
+        searchField.setValueChangeMode(ValueChangeMode.EAGER);
+        searchField.addValueChangeListener(e -> {
+            dataView.refreshAll();
+        });
+        
+        dataView.addFilter(paciente -> {
+            String searchTerm = searchField.getValue().trim().toLowerCase();
+            if (searchTerm.isEmpty()) return true;
+            
+            boolean matchesNome = paciente.getNome() != null && paciente.getNome().toLowerCase().contains(searchTerm);
+            boolean matchesTelefone = paciente.getTelefone() != null && paciente.getTelefone().replaceAll("[^0-9]", "").contains(searchTerm.replaceAll("[^0-9]", ""));
+            
+            return matchesNome || matchesTelefone;
+        });
+
+        searchField.getStyle().set("flex-grow", "1");
 
         getContent().setWidth("100%");
         getContent().getStyle().set("flex-grow", "1");
@@ -100,7 +125,7 @@ public class PacientesView extends Composite<VerticalLayout> {
         pacientesGrid.setWidth("100%");
         pacientesGrid.getStyle().set("flex-grow", "0");
         getContent().add(layoutRow);
-        layoutRow.add(adicionarPacienteButton);
+        layoutRow.add(searchField, adicionarPacienteButton);
         getContent().add(pacientesGrid);
     }
 

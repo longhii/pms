@@ -15,9 +15,14 @@ public class Pagamento {
 
     private Double valor;
 
+    private StatusPagamento status;
+
     private LocalDateTime data;
 
-    @OneToMany
+    @ManyToOne
+    private Psicologo psicologo;
+
+    @OneToMany(mappedBy = "pagamento")
     private List<Consulta> consultas;
 
     public Long getId() {
@@ -32,12 +37,28 @@ public class Pagamento {
         this.valor = valor;
     }
 
+    public StatusPagamento getStatus() {
+        return status;
+    }
+
+    public void setStatus(StatusPagamento status) {
+        this.status = status;
+    }
+
     public LocalDateTime getData() {
         return data;
     }
 
     public void setData(LocalDateTime data) {
         this.data = data;
+    }
+
+    public Psicologo getPsicologo() {
+        return psicologo;
+    }
+
+    public void setPsicologo(Psicologo psicologo) {
+        this.psicologo = psicologo;
     }
 
     public List<Consulta> getConsultas() {

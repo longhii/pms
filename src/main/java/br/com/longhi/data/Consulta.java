@@ -100,4 +100,12 @@ public class Consulta {
 
         return entry;
     }
+
+    public Pagamento getPagamento() {
+        return pagamento;
+    }
+
+    public void setPagamento(Pagamento pagamento) {
+        this.pagamento = pagamento;
+    }
 }

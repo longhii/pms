@@ -11,6 +11,11 @@ import java.util.List;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
 
+    @Query("SELECT c FROM Consulta c WHERE c.paciente.psicologo = :psicologo AND c.pagamento IS NULL ORDER BY c.data DESC")
+    List<Consulta> findDisponiveisPorPsicologo(@Param("psicologo") Psicologo psicologo);
+
+    List<Consulta> findByPagamentoId(Long pagamentoId);
+
     @Query("SELECT c FROM Consulta c LEFT JOIN FETCH c.paciente p LEFT JOIN FETCH p.psicologo WHERE p.psicologo = :psicologo AND c.data BETWEEN :start AND :end")
     List<Consulta> findByPacientePsicologoAndDataBetween(
             @Param("psicologo") Psicologo psicologo, @Param("start") LocalDate data, @Param("end") LocalDate dataFim

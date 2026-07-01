@@ -1,5 +1,5 @@
 package br.com.longhi.data;
 
 public enum Status {
-    PAGO, AGUARDANDO
+    ATENDIDO, CANCELADO, EM_ESPERA
 }

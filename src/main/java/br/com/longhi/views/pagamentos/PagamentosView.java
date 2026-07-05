@@ -286,6 +286,18 @@ public class PagamentosView extends Composite<VerticalLayout> {
         consultaGrid.setWidthFull();
         consultaGrid.setHeight("200px");
 
+        consultaGrid.addSelectionListener(e -> {
+            var valorPadrao = pagamentoService.buscarValorPadraoConsulta();
+            if (valorPadrao != null && valorPadrao > 0) {
+                var selecionadas = e.getAllSelectedItems().size();
+                var bean = binderPagamento.getBean();
+                if (bean != null && (bean.getValor() == null || bean.getValor() == 0)) {
+                    bean.setValor(selecionadas * valorPadrao);
+                    binderPagamento.readBean(bean);
+                }
+            }
+        });
+
         var consultaSection = new VerticalLayout();
         consultaSection.setPadding(false);
         consultaSection.setSpacing(false);

@@ -23,6 +23,8 @@ public class Psicologo {
 
     private String telefone;
 
+    private Double valorPadraoConsulta;
+
     public Long getId() {
         return id;
     }
@@ -77,5 +79,13 @@ public class Psicologo {
 
     public void setTelefone(String telefone) {
         this.telefone = telefone;
+    }
+
+    public Double getValorPadraoConsulta() {
+        return valorPadraoConsulta;
+    }
+
+    public void setValorPadraoConsulta(Double valorPadraoConsulta) {
+        this.valorPadraoConsulta = valorPadraoConsulta;
     }
 }

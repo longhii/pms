@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
@@ -14,4 +15,9 @@ public interface ConsultaRepository extends JpaRepository<Consulta, Long> {
     List<Consulta> findDisponiveisPorPsicologo(@Param("psicologo") Psicologo psicologo);
 
     List<Consulta> findByPagamentoId(Long pagamentoId);
+
+    @Query("SELECT c FROM Consulta c LEFT JOIN FETCH c.paciente p LEFT JOIN FETCH p.psicologo WHERE p.psicologo = :psicologo AND c.data BETWEEN :start AND :end")
+    List<Consulta> findByPacientePsicologoAndDataBetween(
+            @Param("psicologo") Psicologo psicologo, @Param("start") LocalDate data, @Param("end") LocalDate dataFim
+    );
 }

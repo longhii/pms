@@ -167,7 +167,10 @@ public class PagamentoDialog {
             pacienteField.setValue(paciente);
             pacienteField.setEnabled(false);
             carregarConsultas(paciente);
-            pagamento.getConsultas().forEach(consultaGrid::select);
+            consultaGrid.getListDataView().getItems()
+                    .filter(c -> pagamento.getConsultas().stream()
+                            .anyMatch(pc -> pc.getId().equals(c.getId())))
+                    .forEach(consultaGrid::select);
         }
 
         dataField.setValue(pagamento.getData() != null ? pagamento.getData().toLocalDate() : LocalDate.now());
@@ -197,7 +200,10 @@ public class PagamentoDialog {
 
         carregarConsultas(paciente);
         consultaGrid.deselectAll();
-        consultaGrid.select(consulta);
+        consultaGrid.getListDataView().getItems()
+                .filter(c -> c.getId().equals(consulta.getId()))
+                .findFirst()
+                .ifPresent(consultaGrid::select);
 
         var pagamento = new Pagamento();
         pagamento.setData(LocalDateTime.now());

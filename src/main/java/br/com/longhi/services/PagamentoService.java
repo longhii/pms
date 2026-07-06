@@ -1,6 +1,7 @@
 package br.com.longhi.services;
 
 import br.com.longhi.data.Consulta;
+import br.com.longhi.data.Paciente;
 import br.com.longhi.data.Pagamento;
 import br.com.longhi.data.StatusPagamento;
 import br.com.longhi.repository.ConsultaRepository;
@@ -79,6 +80,12 @@ public class PagamentoService {
     public List<Consulta> buscarConsultasDisponiveis() {
         var psi = authenticatedUser.carregarPsicologoLogado();
         return consultaRepository.findDisponiveisPorPsicologo(psi);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Consulta> buscarConsultasDisponiveisPorPaciente(Paciente paciente) {
+        var psi = authenticatedUser.carregarPsicologoLogado();
+        return consultaRepository.findDisponiveisPorPaciente(paciente, psi);
     }
 
     @Transactional(readOnly = true)

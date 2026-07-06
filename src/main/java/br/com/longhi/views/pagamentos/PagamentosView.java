@@ -286,17 +286,19 @@ public class PagamentosView extends Composite<VerticalLayout> {
         consultaGrid.setWidthFull();
         consultaGrid.setHeight("200px");
 
-        consultaGrid.addSelectionListener(e -> {
-            var valorPadrao = pagamentoService.buscarValorPadraoConsulta();
-            if (valorPadrao != null && valorPadrao > 0) {
-                var selecionadas = e.getAllSelectedItems().size();
-                var bean = binderPagamento.getBean();
-                if (bean != null && (bean.getValor() == null || bean.getValor() == 0)) {
-                    bean.setValor(selecionadas * valorPadrao);
-                    binderPagamento.readBean(bean);
+        if (pagamentoExistente == null) {
+            consultaGrid.addSelectionListener(e -> {
+                var valorPadrao = pagamentoService.buscarValorPadraoConsulta();
+                if (valorPadrao != null && valorPadrao > 0) {
+                    var selecionadas = consultaGrid.getSelectedItems().size();
+                    var bean = binderPagamento.getBean();
+                    if (bean != null) {
+                        bean.setValor(selecionadas * valorPadrao);
+                        binderPagamento.readBean(bean);
+                    }
                 }
-            }
-        });
+            });
+        }
 
         var consultaSection = new VerticalLayout();
         consultaSection.setPadding(false);
@@ -306,7 +308,7 @@ public class PagamentosView extends Composite<VerticalLayout> {
         consultaSection.add(consultaLabel, consultaGrid);
 
         if (pagamentoExistente != null && pagamentoExistente.getConsultas() != null) {
-            consultaGrid.getSelectedItems().addAll(pagamentoExistente.getConsultas());
+            pagamentoExistente.getConsultas().forEach(consultaGrid::select);
         }
 
         var dialogLayout = new VerticalLayout(formLayout, consultaSection);

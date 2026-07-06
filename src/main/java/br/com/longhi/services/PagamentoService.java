@@ -44,7 +44,7 @@ public class PagamentoService {
             var consultas = consultaRepository.findAllById(consultaIds);
             for (var consulta : consultas) {
                 consulta.setPagamento(pagamento);
-                consulta.setStatusPagamento(StatusPagamento.AGUARDANDO);
+                consulta.setStatusPagamento(pagamento.getStatus());
                 consultaRepository.save(consulta);
             }
         }
@@ -70,10 +70,41 @@ public class PagamentoService {
                 .toList();
     }
 
+    public Double buscarValorPadraoConsulta() {
+        var psi = authenticatedUser.carregarPsicologoLogado();
+        return psi.getValorPadraoConsulta();
+    }
+
     @Transactional(readOnly = true)
     public List<Consulta> buscarConsultasDisponiveis() {
         var psi = authenticatedUser.carregarPsicologoLogado();
         return consultaRepository.findDisponiveisPorPsicologo(psi);
+    }
+
+    @Transactional(readOnly = true)
+    public Double calcularTicketMedio() {
+        var psi = authenticatedUser.carregarPsicologoLogado();
+        var pagamentos = pagamentoRepository.findByPsicologoAndStatus(psi, StatusPagamento.PAGO);
+        if (pagamentos.isEmpty()) return 0.0;
+        return pagamentos.stream()
+                .mapToDouble(p -> p.getValor() != null ? p.getValor() : 0.0)
+                .average()
+                .orElse(0.0);
+    }
+
+    @Transactional(readOnly = true)
+    public List<Object[]> calcularTicketMedioPorPaciente() {
+        var psi = authenticatedUser.carregarPsicologoLogado();
+        var pagamentos = pagamentoRepository.findByPsicologoAndStatus(psi, StatusPagamento.PAGO);
+        return pagamentos.stream()
+                .filter(p -> p.getConsultas() != null && !p.getConsultas().isEmpty())
+                .collect(java.util.stream.Collectors.groupingBy(
+                        p -> p.getConsultas().get(0).getPaciente().getNome(),
+                        java.util.stream.Collectors.summingDouble(p -> p.getValor() != null ? p.getValor() : 0.0)
+                ))
+                .entrySet().stream()
+                .map(e -> new Object[]{e.getKey(), e.getValue()})
+                .toList();
     }
 
     @Transactional

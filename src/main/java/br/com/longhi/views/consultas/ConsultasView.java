@@ -2,7 +2,6 @@ package br.com.longhi.views.consultas;
 
 import br.com.longhi.data.Consulta;
 import br.com.longhi.data.Paciente;
-import br.com.longhi.data.Pagamento;
 import br.com.longhi.data.Status;
 import br.com.longhi.data.StatusPagamento;
 import br.com.longhi.repository.ConsultaRepository;
@@ -41,10 +40,7 @@ import org.vaadin.stefan.fullcalendar.Timezone;
 import org.vaadin.stefan.fullcalendar.dataprovider.EntryProvider;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
 
 @PageTitle("Consultas")
 @Route(value = "", layout = MainLayout.class)
@@ -306,19 +302,10 @@ public class ConsultasView extends VerticalLayout {
             criarPagamentoButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SMALL);
             criarPagamentoButton.addClickListener(ev -> {
                 dialog.close();
-                pagamentoDialog.abrirParaConsulta(consulta, () -> {
-                    entryProvider.refreshAll();
-                });
+                pagamentoDialog.abrirParaConsulta(consulta, entryProvider::refreshAll);
             });
 
-            var marcarPagoButton = new Button("Marcar como pago", VaadinIcon.CHECK.create());
-            marcarPagoButton.addThemeVariants(ButtonVariant.LUMO_SUCCESS, ButtonVariant.LUMO_SMALL);
-            marcarPagoButton.addClickListener(ev -> {
-                dialog.close();
-                abrirDialogMarcarPago(consulta);
-            });
-
-            pagamentoSection.add(criarPagamentoButton, marcarPagoButton);
+            pagamentoSection.add(criarPagamentoButton);
         }
 
         var salvarButton = new Button("Salvar", e -> {
@@ -366,79 +353,4 @@ public class ConsultasView extends VerticalLayout {
         dialog.open();
     }
 
-    private void abrirDialogMarcarPago(Consulta consulta) {
-        var paciente = consulta.getPaciente();
-        var psi = authenticatedUser.carregarPsicologoLogado();
-        var futuras = consultaRepository.findFutureUnpaidByPaciente(paciente, LocalDate.now(), Status.CANCELADO);
-
-        var dialog = new Dialog();
-        dialog.setHeaderTitle("Marcar pagamento como pago");
-        dialog.setWidth("450px");
-
-        var mensagem = new Span("Paciente: " + paciente.getNome());
-        mensagem.getStyle().setFontWeight("bold");
-
-        var consultaInfo = new Span(
-                "Consulta: " + consulta.getData() + " " + consulta.getHoraInicio());
-        consultaInfo.getStyle().setColor("var(--lumo-secondary-text-color)");
-
-        var apenasEstaButton = new Button("Apenas esta consulta", VaadinIcon.CHECK.create());
-        apenasEstaButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_SUCCESS);
-        apenasEstaButton.addClickListener(ev -> {
-            try {
-                var pagamento = new Pagamento();
-                pagamento.setValor(null);
-                pagamento.setStatus(StatusPagamento.PAGO);
-                pagamento.setData(LocalDateTime.now());
-                pagamentoService.salvarPagamento(pagamento, List.of(consulta.getId()));
-                entryProvider.refreshAll();
-                Notification.show("Pagamento registrado com sucesso.");
-                dialog.close();
-            } catch (Exception ex) {
-                Notification.show("Erro ao registrar pagamento: " + ex.getMessage());
-            }
-        });
-
-        var optionsLayout = new VerticalLayout(mensagem, consultaInfo, apenasEstaButton);
-        optionsLayout.setPadding(false);
-        optionsLayout.setSpacing(true);
-
-        var futurasFiltradas = futuras.stream()
-                .filter(c -> !c.getId().equals(consulta.getId()))
-                .toList();
-
-        if (!futurasFiltradas.isEmpty()) {
-            var estaEFuturasButton = new Button(
-                    "Esta e mais " + futurasFiltradas.size() + " consulta(s) futura(s)",
-                    VaadinIcon.FORWARD.create());
-            estaEFuturasButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);
-            estaEFuturasButton.addClickListener(ev -> {
-                try {
-                    var ids = new ArrayList<Long>();
-                    ids.add(consulta.getId());
-                    futurasFiltradas.stream()
-                            .map(Consulta::getId)
-                            .forEach(ids::add);
-
-                    var pagamento = new Pagamento();
-                    pagamento.setValor(null);
-                    pagamento.setStatus(StatusPagamento.PAGO);
-                    pagamento.setData(LocalDateTime.now());
-                    pagamentoService.salvarPagamento(pagamento, ids);
-                    entryProvider.refreshAll();
-                    Notification.show("Pagamento registrado para " + ids.size() + " consulta(s).");
-                    dialog.close();
-                } catch (Exception ex) {
-                    Notification.show("Erro ao registrar pagamento: " + ex.getMessage());
-                }
-            });
-            optionsLayout.add(estaEFuturasButton);
-        }
-
-        var cancelarButton = new Button("Cancelar", e -> dialog.close());
-
-        dialog.add(optionsLayout);
-        dialog.getFooter().add(cancelarButton);
-        dialog.open();
-    }
 }
